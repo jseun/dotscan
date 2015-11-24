@@ -1,2 +1,1 @@
-# doscan
-Digital Ocean Network Port Scanner
+# A Simple Network Port Scanner for DigitalOcean folks
