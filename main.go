@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/jseun/doscan/scanner"
 )
@@ -34,10 +35,15 @@ const (
 	version = "0.0.0"
 )
 
+// Attempt dial for 5 seconds only. Use -t to raise this value.
+const defaultTimeout = time.Duration(time.Second * 5)
+
 var (
 	// Flags
 	isUDP     = flag.Bool("u", false, "Scan for UDP ports instead of TCP")
 	showUsage = flag.Bool("h", false, "Show usage")
+	timeout   = flag.Duration("t", defaultTimeout, "Dial timeout (default 5s)")
+	worker    = flag.Uint("w", 768, "Maximum opened file descriptor")
 )
 
 func header() { fmt.Printf(banner, version); fmt.Printf("\n%s\n", copyright) }
@@ -54,20 +60,20 @@ func usage(oops string, fail bool) {
 	os.Exit(0)
 }
 
-func shutdown(err error) {
-	switch {
-	case err != nil:
-		fmt.Println(err)
-	default:
-		fmt.Println()
-	}
-	os.Exit(0)
-}
+func show(hosts scanner.Hosts) {
+	fmt.Println()
+	for _, host := range hosts {
+		fmt.Printf("\t%s:", host.Addr)
+		if len(host.Ports) < 1 {
+			fmt.Println(" down?")
+			continue
+		}
 
-func trap() {
-	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt)
-	go func() { <-c; shutdown(nil) }()
+		for _, port := range host.Ports {
+			fmt.Printf(" %d", port.Number)
+		}
+		fmt.Println(".")
+	}
 }
 
 func main() {
@@ -89,5 +95,30 @@ func main() {
 	}
 
 	header()
-	trap()
+
+	network := "tcp"
+	if *isUDP {
+		network = "udp"
+	}
+
+	t := time.Now()
+
+	abort := make(chan os.Signal)
+	done := scanner.RunAndWait(network, hosts, *timeout, *worker)
+	signal.Notify(abort, os.Interrupt)
+	for {
+		select {
+		case <-abort:
+			fmt.Println()
+			fmt.Println("Scan aborted.")
+			os.Exit(0)
+
+		case <-done:
+			show(hosts)
+			fmt.Println()
+			fmt.Println("Scan completed in", time.Since(t))
+			os.Exit(0)
+
+		}
+	}
 }

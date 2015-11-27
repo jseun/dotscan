@@ -5,28 +5,33 @@
 package scanner
 
 import (
+	"fmt"
 	"net"
+	"sync/atomic"
+	"time"
 )
 
 // Host contains the scan results and information about a host.
 type Host struct {
 	Addr  string
 	Ports []Port
+	port  int32
 }
 
+// Hosts is a list of Host.
+type Hosts []*Host
+
 // NewHost returns a new instance of Host with given IP address.
-func NewHost(addr string) *Host {
-	return &Host{Addr: addr}
-}
+func NewHost(addr string) *Host { return &Host{Addr: addr} }
 
 // NewHosts takes a variable format string as argument and tries
 // to resolve it into either a list of hosts from a network block,
 // a single ip address to scan or a hostname. It returns a slice
 // of Host or nil if resolving the argument failed.
-func NewHosts(arg string) []*Host {
+func NewHosts(arg string) Hosts {
 	if ip, network, err := net.ParseCIDR(arg); err == nil && ip.Equal(network.IP) {
 		// Whole network address block given.
-		var hosts []*Host
+		var hosts Hosts
 		for ip := ip.Mask(network.Mask); network.Contains(ip); func(ip net.IP) {
 			for j := len(ip) - 1; j >= 0; j-- {
 				ip[j]++
@@ -51,10 +56,28 @@ func NewHosts(arg string) []*Host {
 		return hosts
 	} else if ip := net.ParseIP(arg); ip != nil {
 		// Single IP address given.
-		return []*Host{NewHost(arg)}
+		return Hosts{NewHost(arg)}
 	} else if ips, _ := net.LookupIP(arg); len(ips) > 0 {
 		// Resolved a hostname, take first IP regardless of IP version.
-		return []*Host{NewHost(ips[0].String())}
+		return Hosts{NewHost(ips[0].String())}
+	}
+
+	return nil
+}
+
+// DialNextPort will dial the next port on the host until no more port
+// is to be dialed, i.e., all 65535 ports have been dialed in which case
+// ErrPortOutOfBound is returned. DialNextPort can be called concurrently.
+func (h *Host) DialNextPort(network string, t time.Duration) error {
+	var port int32
+	if port = atomic.AddInt32(&h.port, 1); port > 65535 {
+		return ErrPortOutOfBound
+	}
+
+	address := net.JoinHostPort(h.Addr, fmt.Sprintf("%d", port))
+	if c, err := net.DialTimeout(network, address, t); err == nil {
+		c.Close()
+		h.Ports = append(h.Ports, Port{Number: int(port)})
 	}
 
 	return nil

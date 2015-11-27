@@ -13,7 +13,7 @@ import (
 // hosts addresses computed from a CIDR notation string.
 func TestNewHostsNetworkBlock4(t *testing.T) {
 	hosts := NewHosts("192.168.0.0/30")
-	if !reflect.DeepEqual(hosts, []*Host{
+	if !reflect.DeepEqual(hosts, Hosts{
 		NewHost("192.168.0.1"),
 		NewHost("192.168.0.2"),
 	}) {
@@ -25,7 +25,7 @@ func TestNewHostsNetworkBlock4(t *testing.T) {
 // hosts addresses computed from a CIDR notation string.
 func TestNewHostsNetworkBlock6(t *testing.T) {
 	hosts := NewHosts("fe80::227:10ff:fec3:b1e4/126")
-	if !reflect.DeepEqual(hosts, []*Host{
+	if !reflect.DeepEqual(hosts, Hosts{
 		NewHost("fe80::227:10ff:fec3:b1e4"),
 		NewHost("fe80::227:10ff:fec3:b1e5"),
 		NewHost("fe80::227:10ff:fec3:b1e6"),
@@ -39,7 +39,7 @@ func TestNewHostsNetworkBlock6(t *testing.T) {
 // host address computed from a string.
 func TestNewHostsAddr4(t *testing.T) {
 	hosts := NewHosts("172.16.0.1")
-	if !reflect.DeepEqual(hosts, []*Host{
+	if !reflect.DeepEqual(hosts, Hosts{
 		NewHost("172.16.0.1"),
 	}) {
 		t.Fail()
@@ -50,7 +50,7 @@ func TestNewHostsAddr4(t *testing.T) {
 // host address computed from a string.
 func TestNewHostsAddr6(t *testing.T) {
 	hosts := NewHosts("::1")
-	if !reflect.DeepEqual(hosts, []*Host{
+	if !reflect.DeepEqual(hosts, Hosts{
 		NewHost("::1"),
 	}) {
 		t.Fail()
