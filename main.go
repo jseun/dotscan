@@ -42,7 +42,7 @@ var (
 	// Flags
 	isUDP     = flag.Bool("u", false, "Scan for UDP ports instead of TCP")
 	showUsage = flag.Bool("h", false, "Show usage")
-	timeout   = flag.Duration("t", defaultTimeout, "Dial timeout (default 5s)")
+	timeout   = flag.Duration("t", defaultTimeout, "Dial timeout")
 	worker    = flag.Uint("w", 768, "Maximum opened file descriptor")
 )
 
