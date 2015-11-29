@@ -61,8 +61,7 @@ I love to write tests in Golang.  Other than the unit tests that can be found in
 `scanner/host_test.go` to cover 100% of the NewHosts() function, ~~I would write
 a test with a real scan on a mocked host.~~
 
-Well, I added the test; I couldn't help it.  See TestRunAndWaitLocalhostTCP4 in
-`scanner/scanner_test.go`.
+Well, I added the test; I couldn't help it.  See TestRunAndWaitLocalhostTCP4 and TestRunAndWaitLocalhostTCP6 in `scanner/scanner_test.go`.
 
 ### 3. Hunt the bugs down!
 
