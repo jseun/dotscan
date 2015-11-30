@@ -4,7 +4,7 @@
 
 // +build darwin dragonfly freebsd linux netbsd openbsd solaris
 
-// Read system por mappings from /etc/services
+// Read system port mappings from /etc/services
 
 package scanner
 
