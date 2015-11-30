@@ -38,6 +38,9 @@ const (
 // Attempt dial for 5 seconds only. Use -t to raise this value.
 const defaultTimeout = time.Duration(time.Second * 5)
 
+// Default is to scan for TCP ports.
+var network = "tcp"
+
 var (
 	// Flags
 	isUDP     = flag.Bool("u", false, "Scan for UDP ports instead of TCP")
@@ -69,8 +72,19 @@ func show(hosts scanner.Hosts) {
 			continue
 		}
 
-		for _, port := range host.Ports {
-			fmt.Printf(" %d", port.Number)
+		size := len(host.Ports)
+		for i, port := range host.Ports {
+			fmt.Printf(" %s/%d", network, port.Number)
+			s := scanner.PortToService(network, port.Number)
+			switch {
+			case s == "":
+				fmt.Print(" (?)")
+			default:
+				fmt.Printf(" (%s)", s)
+			}
+			if i+1 < size {
+				fmt.Print(",")
+			}
 		}
 		fmt.Println(".")
 	}
@@ -96,7 +110,6 @@ func main() {
 
 	header()
 
-	network := "tcp"
 	if *isUDP {
 		network = "udp"
 	}
