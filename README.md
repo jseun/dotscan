@@ -20,12 +20,13 @@ This project contains Go source to build an efficient port scanner.
 ## Wait, Sam! What features did you implement so far?
 
 While I tried to keep that project as complete as possible yet delivering
-it as fast as possible, this is the features I could get done in 2 days
+it as fast as possible, this is the features I could get done in 3 days
 of work.
 
  * Concurrency in the port scanning process
  * Support for IP version 6 hosts
  * Ability to scan blocks of hosts
+ * Map port to services file for service guess
 
 Also, I planned to support UDP port scan from the beginning but UDP
 protocol being stateless requires a way more complete port scan technique
