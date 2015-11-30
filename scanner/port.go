@@ -9,3 +9,9 @@ type Port struct {
 	Name   string
 	Number int
 }
+
+// PortToService tries to resolve the common service name
+// registered for a given port number and network type.
+func PortToService(network string, port int) string {
+	return lookupService(network, port)
+}
