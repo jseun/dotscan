@@ -14,6 +14,7 @@ import (
 // Host contains the scan results and information about a host.
 type Host struct {
 	Addr  string
+	IsUp  bool
 	Ports []Port
 	port  int32
 }
@@ -76,8 +77,12 @@ func (h *Host) DialNextPort(network string, t time.Duration) error {
 
 	address := net.JoinHostPort(h.Addr, fmt.Sprintf("%d", port))
 	if c, err := net.DialTimeout(network, address, t); err == nil {
+		h.IsUp = true
+		h.Ports = append(h.Ports, Port{
+			Number: int(port),
+			IsOpen: true,
+		})
 		c.Close()
-		h.Ports = append(h.Ports, Port{Number: int(port)})
 	}
 
 	return nil

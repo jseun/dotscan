@@ -68,13 +68,17 @@ func show(hosts scanner.Hosts) {
 	fmt.Println()
 	for _, host := range hosts {
 		fmt.Printf("\t%s:", host.Addr)
-		if len(host.Ports) < 1 {
+		if !host.IsUp {
 			fmt.Println(" down?")
 			continue
 		}
 
 		size := len(host.Ports)
 		for i, port := range host.Ports {
+			if !port.IsOpen {
+				continue
+			}
+
 			fmt.Printf(" %s/%d", network, port.Number)
 			if !(*noLookup) {
 				showPortService(port.Number)

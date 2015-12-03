@@ -4,9 +4,9 @@
 
 package scanner
 
-// Port contains the name and number of a network port.
+// Port contains the status and properties of a network port for a host.
 type Port struct {
-	Name   string
+	IsOpen bool
 	Number int
 }
 
