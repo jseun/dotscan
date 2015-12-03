@@ -47,6 +47,7 @@ var (
 	showUsage = flag.Bool("h", false, "Show usage")
 	timeout   = flag.Duration("t", defaultTimeout, "Dial timeout")
 	worker    = flag.Uint("w", 768, "Maximum opened file descriptor")
+	noLookup  = flag.Bool("n", false, "Do not resolve ports to services")
 )
 
 func header() { fmt.Printf(banner, version); fmt.Printf("\n%s\n", copyright) }
@@ -75,18 +76,25 @@ func show(hosts scanner.Hosts) {
 		size := len(host.Ports)
 		for i, port := range host.Ports {
 			fmt.Printf(" %s/%d", network, port.Number)
-			s := scanner.PortToService(network, port.Number)
-			switch {
-			case s == "":
-				fmt.Print(" (?)")
-			default:
-				fmt.Printf(" (%s)", s)
+			if !(*noLookup) {
+				showPortService(port.Number)
 			}
+
 			if i+1 < size {
 				fmt.Print(",")
 			}
 		}
 		fmt.Println(".")
+	}
+}
+
+func showPortService(port int) {
+	s := scanner.PortToService(network, port)
+	switch {
+	case s == "":
+		fmt.Print(" (?)")
+	default:
+		fmt.Printf(" (%s)", s)
 	}
 }
 
