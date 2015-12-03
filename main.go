@@ -79,7 +79,7 @@ func show(hosts scanner.Hosts) {
 				continue
 			}
 
-			fmt.Printf(" %s/%d", network, port.Number)
+			fmt.Printf(" %s", port)
 			if !(*noLookup) {
 				showPortService(port.Number)
 			}
