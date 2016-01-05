@@ -1,8 +1,7 @@
 # A Simple Network Port Scanner for DigitalOcean folks
 
 Hi! Welcome to my intimate attempt at getting a job at DigitalOcean.
-As part of the interview process, I have been asked to build
-an efficient port scanner with the following requirements.
+As part of the interview process, I have been asked to build an efficient port scanner with the following requirements.
 
  * Ability to scan a single host with TCP from 1 to 65535.
  * Write quality code, as in production, and test it.
@@ -19,61 +18,38 @@ This project contains Go source to build an efficient port scanner.
 
 ## Wait, Sam! What features did you implement so far?
 
-While I tried to keep that project as complete as possible yet delivering
-it as fast as possible, this is the features I could get done in 3 days
-of work.
+While I tried to keep that project as complete as possible yet delivering it as fast as possible, this is the features I could get done in 3 days of work.
 
  * Concurrency in the port scanning process
  * Support for IP version 6 hosts
  * Ability to scan blocks of hosts
  * Map port to services file for service guess
 
-Also, I planned to support UDP port scan from the beginning but UDP
-protocol being stateless requires a way more complete port scan technique
-than TCP.  For that reason, I focused on writing good and simple code.
+Also, I planned to support UDP port scan from the beginning but UDP protocol being stateless requires a way more complete port scan technique than TCP.  For that reason, I focused on writing good and simple code.
 
-### So there is quite some bugs, right?
+## And... Did you get the job?
 
-Well, yes.  Read the last sentence as UDP port scan is broken in the project even though
-you can specify a flag for it.
+Yes! I'll be working as a software engineer at DO starting on the 25th of January 2016.
 
-Also, IP version 6 scan seems to work fine for localhost but not for remote hosts.
-That feature would require a little more attention, I confess.
+## So what about this project?  Is it over?
 
-Other than that, I've seen some erroneous results when scanning a block of hosts.
-
-## So what would you do if you had more time or been paid to write the software?
-
-Here's the amount of work I would put into this project to close the deal if I knew
-upfront that DigitalOcean will let me join the team.
+Well, it is over for me.  I won't be adding new features, fixing bugs or maintaining this project at all.  However, if you feel a bit challenged about this project, you might want to look at the following tasks.
 
 ### 1. Fix UDP port scan
 
-UDP port scan requires some payload to be sent at the host and there is no guarantee
-that a given dummy payload will make the remote host answer even if there's a service
-running at that port.
-
-To fix UDP port scan, I would need to put some extra efforts in building some known
-payload for known UDP services.
+UDP port scan requires some payload to be sent at the host and there is no guarantee that a given dummy payload will make the remote host answer even if there's a service running at that port.
 
 ### 2. Write more tests
 
-I love to write tests in Golang.  Other than the unit tests that can be found in
-`scanner/host_test.go` to cover 100% of the NewHosts() function, ~~I would write
-a test with a real scan on a mocked host.~~
-
-Well, I added the test; I couldn't help it.  See TestRunAndWaitLocalhostTCP4 and TestRunAndWaitLocalhostTCP6 in `scanner/scanner_test.go`.
+I love to write tests in Golang.  Other than the unit tests that can be found in `scanner/host_test.go` to cover 100% of the NewHosts() function, and TestRunAndWaitLocalhostTCP4 and TestRunAndWaitLocalhostTCP6 in `scanner/scanner_test.go`, a lot of other tests could be written.
 
 ### 3. Hunt the bugs down!
 
-When scanning a host that does not exist, I've seen some erroneous results like
-the port x is open which cannot be real unless my network is haunted by ghost hosts.
-I guess I should call the ghost hosts buster.
+When scanning a host that does not exist, I've seen some erroneous results like the port x is open which cannot be real unless my network is haunted by ghost hosts. I guess I should call the ghost hosts buster.
 
 # Enough.  How do I run the software?
 
-OK.  Here's the deal.  Do you want a blazing fast port scan?  If the answer is yes,
-read on.
+OK.  Here's the deal.  Do you want a blazing fast port scan?  If the answer is yes, read on.
 
 Else, you may go directly to the section called *I don't have time for configuration*.
 
@@ -84,15 +60,11 @@ $ go get github.com/jseun/doscan
 
 ## Run the software as root
 
-What you need to realize is that if we can concurrently open 65535 ports to scan
-a host, it would take seconds to get results.
+What you need to realize is that if we can concurrently open 65535 ports to scan a host, it would take seconds to get results.
 
 Here's how I achieved my best shots.
 
-Running 20480 workers, each of them dialing a port for maximum 10 seconds,
-given that there is 65535 ports to dial, it would take around 3 rounds
-to cover them all.  Which gives us an execution time of about 30 seconds.
-Add some more if you need to resolve a hostname first.
+Running 20480 workers, each of them dialing a port for maximum 10 seconds, given that there is 65535 ports to dial, it would take around 3 rounds to cover them all.  Which gives us an execution time of about 30 seconds. Add some more if you need to resolve a hostname first.
 
 ```
 $ sudo -s
@@ -109,11 +81,10 @@ license that can be found in the LICENSE file.
 Scan completed in 40.147542483s
 ```
 
-However, if you are scanning a host on your local network, a timeout of 5s
-should be enough, thus reducing execution time by a power of 2.
+However, if you are scanning a host on your local network, a timeout of 5s should be enough, thus reducing execution time by a power of 2.
 
 ```
-# doscan -w 20480 -t 5s 192.168.0.1
+# dotscan -w 20480 -t 5s 192.168.0.1
 Simple Network Port Scanner version 0.0.0
 
 Copyright 2015 Samuel Jean. All rights reserved.
@@ -131,7 +102,7 @@ This is my wifi router.
 
 No problem, mate.  We will take it easy.
 ```
-$ doscan localhost
+$ dotscan localhost
 Simple Network Port Scanner version 0.0.0
 
 Copyright 2015 Samuel Jean. All rights reserved.
@@ -147,11 +118,4 @@ Scanning localhost with the default parameters will give you fast results.
 
 # Conclusion
 
-Thank you for reading this far.  I've been very enthusiast about this homework
-and I hope it will let DigitalOcean folks see what I can bring to their table.
-
-In the meantime, I might tackle some of the bugs just because I can't stand
-writing buggy programs.
-
-To DigitalOcean folks, please let me know if you need some more of it.
-Better yet, create an issue in this Github repository.
+Thank you for reading this far.  I've been very enthusiast about this homework and I am glad it gave me a chance to get a job at DigitalOcean.
