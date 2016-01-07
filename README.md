@@ -41,7 +41,7 @@ UDP port scan requires some payload to be sent at the host and there is no guara
 
 ### 2. Write more tests
 
-I love to write tests in Golang.  Other than the unit tests that can be found in `scanner/host_test.go` to cover 100% of the NewHosts() function, and TestRunAndWaitLocalhostTCP4 and TestRunAndWaitLocalhostTCP6 in `scanner/scanner_test.go`, a lot of other tests could be written.
+I love to write tests in Golang.  Other than the unit tests in `scanner/host_test.go` to cover 100% of the NewHosts() function, the TestRunAndWaitLocalhostTCP4 and TestRunAndWaitLocalhostTCP6 in `scanner/scanner_test.go` to perform a real scan on localhost; a lot of other tests could be written.
 
 ### 3. Hunt the bugs down!
 
@@ -53,9 +53,9 @@ OK.  Here's the deal.  Do you want a blazing fast port scan?  If the answer is y
 
 Else, you may go directly to the section called *I don't have time for configuration*.
 
-In any case, you would need to install `doscan` using `go`.
+In any case, you would need to install `dotscan` using `go`.
 ```
-$ go get github.com/jseun/doscan
+$ go get github.com/jseun/dotscan
 ```
 
 ## Run the software as root
@@ -69,7 +69,7 @@ Running 20480 workers, each of them dialing a port for maximum 10 seconds, given
 ```
 $ sudo -s
 # ulimit -n 100000
-# doscan -w 20480 -t 10s google.com
+# dotscan -w 20480 -t 10s google.com
 Simple Network Port Scanner version 0.0.0
 
 Copyright 2015 Samuel Jean. All rights reserved.
@@ -118,4 +118,4 @@ Scanning localhost with the default parameters will give you fast results.
 
 # Conclusion
 
-Thank you for reading this far.  I've been very enthusiast about this homework and I am glad it gave me a chance to get a job at DigitalOcean.
+Thank you for reading this far.  I've been very enthusiast about this homework and I am glad it gave me a chance to land a job at DigitalOcean.
